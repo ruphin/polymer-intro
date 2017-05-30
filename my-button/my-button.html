@@ -1,0 +1,68 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+
+<dom-module id="my-button">
+  <template>
+    <style>
+      :host {
+        cursor: pointer;
+        display: inline-block;
+        padding: 6px 25px;
+        background-color: rgb(0, 120, 215);
+        font-family: sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        color: white;
+      }
+      :host(:hover) {
+        background-color: rgb(0, 108, 194);
+      }
+    </style>
+    <span>Click to [[action]]</span>
+  </template>
+
+  <script>
+    /**
+     * `my-button`
+     *
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class MyButton extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'my-button'; }
+      static get properties() {
+        return {
+          action: {
+            type: String,
+            value: 'open',
+            reflectToAttribute: true
+          },
+          loud: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: "_loudChanged"
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+        Polymer.Gestures.addListener(this, 'tap', e => this._tapHandler(e));
+      }
+
+      _tapHandler(e) {
+        console.log(`Time to ${this.action}!`);
+      }
+
+      _loudChanged(newLoud, oldLoud) {
+        if(this.loud) {
+          console.log(`${this.action.toUpperCase()} NOW!!`)
+        }
+      }
+    }
+
+    window.customElements.define(MyButton.is, MyButton);
+  </script>
+</dom-module>
