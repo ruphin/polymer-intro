@@ -17,8 +17,14 @@
       :host(:hover) {
         background-color: rgb(0, 108, 194);
       }
+      :host([xbox]) {
+        background-color: rgb(16, 124, 16);
+      }
+      :host([xbox]:hover) {
+        background-color: rgb(13, 99, 13);
+      }
     </style>
-    <span>Click to [[action]]</span>
+    <span id="label">Click to [[action]]</span>
   </template>
 
   <script>
@@ -39,10 +45,10 @@
             value: 'open',
             reflectToAttribute: true
           },
-          loud: {
+          xbox: {
             type: Boolean,
             reflectToAttribute: true,
-            observer: "_loudChanged"
+            observer: "_xboxChanged"
           },
         };
       }
@@ -50,16 +56,22 @@
       ready() {
         super.ready();
         Polymer.Gestures.addListener(this, 'tap', e => this._tapHandler(e));
+
+        if (this.xbox) {
+          Polymer.Gestures.addListener(this, 'tap', e => this._xboxToggle(e));
+        }
       }
 
       _tapHandler(e) {
-        console.log(`Time to ${this.action}!`);
+        console.log(`Button reads: ${this.$.label.innerText}!`);
       }
 
-      _loudChanged(newLoud, oldLoud) {
-        if(this.loud) {
-          console.log(`${this.action.toUpperCase()} NOW!!`)
-        }
+      _xboxToggle(e) {
+        this.xbox = !this.xbox;
+      }
+
+      _xboxChanged(newXbox, oldXbox) {
+        console.log(`Xbox changed! Old xbox: ${oldXbox} - new xbox: ${newXbox}`)
       }
     }
 
